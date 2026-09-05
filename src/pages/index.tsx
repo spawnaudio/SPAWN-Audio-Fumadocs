@@ -1,80 +1,90 @@
+import { Link } from "fumapress/client";
 import { getPressContext } from "../../press.config";
-import { HubFeature } from "../components/hub-feature";
-
-function formatDate(value: unknown): string | undefined {
-  if (!value) return undefined;
-  const date = value instanceof Date ? value : new Date(String(value));
-  if (Number.isNaN(date.getTime())) return String(value);
-  return date.toLocaleDateString("en-GB", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
-function postDateValue(data: Record<string, unknown>): number {
-  const raw = data.date;
-  if (!raw) return 0;
-  const date = raw instanceof Date ? raw : new Date(String(raw));
-  return Number.isNaN(date.getTime()) ? 0 : date.getTime();
-}
+import { HubCards } from "../components/hub-cards";
 
 export default async function HomePage() {
   const loader = await getPressContext().getLoader();
   const pages = loader.getPages();
 
-  const blogPosts = pages
+  const recentBlog = pages
     .filter(
       (page) =>
         page.url.startsWith("/blog/") &&
         page.url !== "/blog" &&
         !page.url.startsWith("/blog/tags"),
     )
-    .map((page) => {
-      const data = page.data as Record<string, unknown>;
-      return {
-        url: page.url,
-        title: String(data.title ?? page.url),
-        description:
-          typeof data.description === "string" ? data.description : undefined,
-        date: formatDate(data.date),
-        sortValue: postDateValue(data),
-      };
-    })
-    .sort((a, b) => b.sortValue - a.sortValue);
+    .slice(0, 5);
 
-  const featured = blogPosts[0]
-    ? {
-        url: blogPosts[0].url,
-        title: blogPosts[0].title,
-        description: blogPosts[0].description,
-        date: blogPosts[0].date,
-      }
-    : null;
-
-  const morePosts = blogPosts.slice(1, 4).map(({ url, title, description, date }) => ({
-    url,
-    title,
-    description,
-    date,
-  }));
+  const pinnedWiki = [
+    { href: "/spawn/projects/active", label: "Active projects" },
+    { href: "/spawn/workflows", label: "Workflows" },
+    { href: "/spawn/sops", label: "SOPs" },
+    { href: "/study/practical-bridges", label: "Study bridges" },
+  ];
 
   return (
-    <main className="editorial-surface mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 py-20 md:py-28">
-      <header className="flex max-w-3xl flex-col gap-6">
-        <p className="text-sm tracking-[0.28em] text-fd-muted-foreground uppercase">
+    <main className="mx-auto flex w-full max-w-5xl flex-col gap-14 px-6 py-16">
+      <header className="flex flex-col gap-4">
+        <p className="text-sm tracking-[0.2em] text-fd-muted-foreground uppercase">
           [SPAWN] Audio
         </p>
-        <h1 className="editorial-display text-4xl font-medium leading-[1.1] md:text-6xl">
-          Notes from the room.
+        <h1 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-5xl">
+          Studio wiki, writing, and study — kept in separate silos, linked on
+          purpose.
         </h1>
-        <p className="editorial-measure text-lg leading-relaxed text-fd-muted-foreground md:text-xl">
-          Writing from sessions and study — with a quieter wiki behind it for
-          the work that needs to stay precise.
+        <p className="max-w-2xl text-lg text-fd-muted-foreground">
+          Procedural docs for client work, a personal blog for session notes and
+          deep-dives, and university material with bridges back into the room.
         </p>
       </header>
 
-      <HubFeature featured={featured} morePosts={morePosts} />
+      <HubCards />
+
+      <section className="grid gap-10 md:grid-cols-2">
+        <div className="flex flex-col gap-4">
+          <h2 className="text-xl font-medium">Recent writing</h2>
+          <ul className="flex flex-col gap-2">
+            {recentBlog.length === 0 ? (
+              <li className="text-fd-muted-foreground text-sm">
+                No posts yet.
+              </li>
+            ) : (
+              recentBlog.map((post) => (
+                <li key={post.url}>
+                  <Link
+                    href={post.url}
+                    className="underline-offset-4 hover:underline"
+                  >
+                    {post.data.title}
+                  </Link>
+                </li>
+              ))
+            )}
+          </ul>
+          <Link
+            href="/blog"
+            className="text-sm text-fd-muted-foreground underline-offset-4 hover:underline"
+          >
+            All posts →
+          </Link>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h2 className="text-xl font-medium">Pinned wiki</h2>
+          <ul className="flex flex-col gap-2">
+            {pinnedWiki.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="underline-offset-4 hover:underline"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
     </main>
   );
 }

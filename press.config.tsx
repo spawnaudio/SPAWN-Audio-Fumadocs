@@ -133,7 +133,7 @@ const config = defineConfig({
             crossOrigin=""
           />
           <link
-            href="https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
             rel="stylesheet"
           />
         </>
@@ -146,13 +146,6 @@ const config = defineConfig({
       paths: {
         index: "/blog",
         tags: "/blog/tags",
-      },
-      layouts: {
-        layout: (props) => (
-          <div className="editorial-surface" data-blog-page="">
-            <HomeLayout {...props} />
-          </div>
-        ),
       },
     }),
   )
