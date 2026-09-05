@@ -1,0 +1,11 @@
+{
+  "name": "[SPAWN] Audio Docs",
+  "install": "bash -lc 'source \"$HOME/.nvm/nvm.sh\" && nvm install 24 && nvm alias default 24 && npm ci'",
+  "terminals": [
+    {
+      "name": "dev",
+      "command": "bash -lc 'source \"$HOME/.nvm/nvm.sh\" && nvm use 24 && npm run dev'"
+    }
+  ],
+  "ports": [3000]
+}
