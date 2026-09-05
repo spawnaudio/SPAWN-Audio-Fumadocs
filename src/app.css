@@ -6,6 +6,41 @@
 
 @theme {
   --font-mono: "JetBrains Mono", monospace;
+  --font-serif: "Newsreader", "Georgia", serif;
   --default-font-family: "Geist", sans-serif;
-  --color-fd-primary: hsl(185 42% 42%);
+  /* Quiet warm steel — editorial, not neon */
+  --color-fd-primary: hsl(28 18% 55%);
+}
+
+/* Hub + blog editorial surfaces */
+.editorial-surface {
+  --editorial-display: var(--font-serif);
+}
+
+.editorial-surface h1,
+.editorial-surface h2,
+.editorial-surface .editorial-display {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+}
+
+.editorial-surface .editorial-measure {
+  max-width: 42rem;
+}
+
+/* Blog article reading width */
+[data-blog-page] article,
+.fd-blog article {
+  max-width: 42rem;
+}
+
+[data-blog-page] h1,
+[data-blog-page] h2,
+[data-blog-page] h3,
+.fd-blog h1,
+.fd-blog h2,
+.fd-blog h3 {
+  font-family: var(--font-serif);
+  letter-spacing: -0.02em;
 }
